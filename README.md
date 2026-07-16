@@ -54,14 +54,10 @@ I built this cybersecurity home lab from scratch as a complete beginner to under
 ## 📡 Network Monitoring
 
 ### Wireshark Capture
-Captured the exact HTTP requests containing my attack payloads.
-
-**Filter used:** `http contains ";"`
-
-![Wireshark Capture](screenshots/wireshark-capture.png)
+I used Wireshark to capture network traffic while performing attacks. The filter `http contains ";"` showed the Command Injection payload in HTTP requests.
 
 ### Docker Logs
-Real-time logs showing attacks being recorded.
+Docker logs recorded attacks in real-time. The SQL Injection payload appeared as `id=1%27+OR+%271%27%3D%271` in the logs.
 
 ```bash
 sudo docker logs -f <container_id>
