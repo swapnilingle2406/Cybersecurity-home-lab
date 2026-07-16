@@ -114,7 +114,7 @@ sudo docker ps
 http://localhost
 ```
 3. Press Enter
-4. Click **"Create/Reset Database"** button
+4. Click "Create/Reset Database" button
 5. Login with:
    - Username: `admin`
    - Password: `password`
@@ -123,44 +123,44 @@ http://localhost
 
 ### Step 12: Set Security Level to Low
 
-1. In DVWA left menu, click **"DVWA Security"**
-2. Change the dropdown to **"low"**
-3. Click **"Submit"**
+1. In DVWA left menu, click "DVWA Security"
+2. Change the dropdown to "low"
+3. Click "Submit"
 
 ---
 
 ### Step 13: Perform Command Injection Attack
 
-1. In DVWA left menu, click **"Command Injection"**
+1. In DVWA left menu, click "Command Injection"
 2. In the "Enter an IP address" box, type:
 ```
 127.0.0.1; ls
 ```
-3. Click **"Submit"**
+3. Click "Submit"
 4. You will see directory listing
 
 ---
 
 ### Step 14: Perform SQL Injection Attack
 
-1. In DVWA left menu, click **"SQL Injection"**
+1. In DVWA left menu, click "SQL Injection"
 2. In the "User ID" box, type:
-```sql
+```
 1' OR '1' = '1
 ```
-3. Click **"Submit"**
+3. Click "Submit"
 4. You will see multiple users displayed
 
 ---
 
 ### Step 15: Perform XSS Attack
 
-1. In DVWA left menu, click **"XSS (Reflected)"**
+1. In DVWA left menu, click "XSS (Reflected)"
 2. In the text box, type:
-```html
+```
 <script>alert('XSS')</script>
 ```
-3. Click **"Submit"**
+3. Click "Submit"
 4. A popup will appear
 
 ---
@@ -172,7 +172,7 @@ http://localhost
 ```bash
 sudo apt install wireshark -y
 ```
-3. When asked, select **"Yes"**
+3. When asked, select "Yes"
 
 ---
 
@@ -186,10 +186,10 @@ sudo wireshark
 
 ### Step 18: Capture Attack Traffic
 
-1. In Wireshark, select **"lo"** (loopback interface)
-2. Click the **blue shark fin** to start capture
+1. In Wireshark, select "lo" (loopback interface)
+2. Click the blue shark fin to start capture
 3. Go to Firefox and perform Command Injection again (`127.0.0.1; ls`)
-4. Click **red square** to stop capture
+4. Click red square to stop capture
 
 ---
 
@@ -209,13 +209,13 @@ Capture these and save them:
 
 | Filename | What to capture |
 |----------|-----------------|
-| `cmd-injection-input.png` | `127.0.0.1; ls` typed |
-| `cmd-injection-output.png` | Directory listing result |
-| `sql-injection-input.png` | `1' OR '1' = '1` typed |
-| `sql-injection-output.png` | Multiple users displayed |
-| `xss-input.png` | `<script>alert('XSS')</script>` typed |
-| `xss-output.png` | Popup alert |
-| `wireshark-capture.png` | Wireshark showing attack packet |
+| cmd-injection-input.png | `127.0.0.1; ls` typed |
+| cmd-injection-output.png | Directory listing result |
+| sql-injection-input.png | `1' OR '1' = '1` typed |
+| sql-injection-output.png | Multiple users displayed |
+| xss-input.png | `<script>alert('XSS')</script>` typed |
+| xss-output.png | Popup alert |
+| wireshark-capture.png | Wireshark showing attack packet |
 
 ---
 
