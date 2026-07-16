@@ -82,206 +82,187 @@ This is a complete step-by-step guide showing how I built my cybersecurity home 
 sudo apt update
 sudo apt install docker.io -y
 
-When asked "Remove all Docker data?" → Select "No"
 
-Step 9: Start DVWA Container
-bash
+### Step 9: Start DVWA Container
+
+1. In the terminal, type:
+```bash
 sudo docker run -d -p 80:80 vulnerables/web-dvwa
-Step 10: Verify DVWA is Running
-bash
+```
+2. Press Enter
+3. Wait for the image to download (2-3 minutes)
+4. You will see a long container ID (like `abc123def456...`)
+
+---
+
+### Step 10: Verify DVWA is Running
+
+1. In the terminal, type:
+```bash
 sudo docker ps
-You should see a container with "vulnerables/web-dvwa"
+```
+2. Press Enter
+3. You should see a container with "vulnerables/web-dvwa" in the list
 
-Step 11: Access DVWA
-Open Firefox (orange fox icon)
+---
 
-Go to: http://localhost
+### Step 11: Access DVWA in Firefox
 
-Click "Create/Reset Database"
+1. Open Firefox (orange fox icon at the bottom of Kali desktop)
+2. In the address bar, type:
+```
+http://localhost
+```
+3. Press Enter
+4. Click **"Create/Reset Database"** button
+5. Login with:
+   - Username: `admin`
+   - Password: `password`
 
-Login with:
+---
 
-Username: admin
+### Step 12: Set Security Level to Low
 
-Password: password
+1. In DVWA left menu, click **"DVWA Security"**
+2. Change the dropdown to **"low"**
+3. Click **"Submit"**
 
-Phase 3: Performing Attacks
-Step 12: Set Security Level to Low
-In DVWA left menu, click "DVWA Security"
+---
 
-Change to "low"
+### Step 13: Perform Command Injection Attack
 
-Click "Submit"
-
-Step 13: Command Injection Attack
-Click "Command Injection" on left menu
-
-In the IP address box, type:
-
-text
+1. In DVWA left menu, click **"Command Injection"**
+2. In the "Enter an IP address" box, type:
+```
 127.0.0.1; ls
-Click "Submit"
+```
+3. Click **"Submit"**
+4. You will see directory listing
 
-Result: You will see directory listing (the server executed the ls command)
+---
 
-Step 14: SQL Injection Attack
-Click "SQL Injection" on left menu
+### Step 14: Perform SQL Injection Attack
 
-In User ID box, type:
-
-sql
+1. In DVWA left menu, click **"SQL Injection"**
+2. In the "User ID" box, type:
+```sql
 1' OR '1' = '1
-Click "Submit"
+```
+3. Click **"Submit"**
+4. You will see multiple users displayed
 
-Result: Multiple users appear in the result
+---
 
-Step 15: XSS Attack (Reflected)
-Click "XSS (Reflected)" on left menu
+### Step 15: Perform XSS Attack
 
-In the text box, type:
-
-html
+1. In DVWA left menu, click **"XSS (Reflected)"**
+2. In the text box, type:
+```html
 <script>alert('XSS')</script>
-Click "Submit"
+```
+3. Click **"Submit"**
+4. A popup will appear
 
-Result: A popup appears saying "XSS"
+---
 
-Phase 4: Monitoring with Wireshark
-Step 16: Install Wireshark
-bash
+### Step 16: Install Wireshark
+
+1. Open a new terminal
+2. Type:
+```bash
 sudo apt install wireshark -y
-Step 17: Start Wireshark
-bash
+```
+3. When asked, select **"Yes"**
+
+---
+
+### Step 17: Start Wireshark
+
+```bash
 sudo wireshark
-Step 18: Capture Attack Traffic
-Select interface "lo" (loopback)
+```
 
-Click the blue shark fin to start capture
+---
 
-Go back to Firefox and perform Command Injection again (127.0.0.1; ls)
+### Step 18: Capture Attack Traffic
 
-Return to Wireshark and click red square to stop
+1. In Wireshark, select **"lo"** (loopback interface)
+2. Click the **blue shark fin** to start capture
+3. Go to Firefox and perform Command Injection again (`127.0.0.1; ls`)
+4. Click **red square** to stop capture
 
-Step 19: Filter the Capture
+---
+
+### Step 19: Filter and Find the Attack
+
 In Wireshark filter bar, type:
-
-text
+```
 http contains ";"
+```
 Press Enter
 
-What you see: The HTTP request containing ; ls in the URL
+---
 
-Step 20: Take Screenshots
-Capture these for documentation:
+### Step 20: Take Screenshots
 
-Command Injection input (127.0.0.1; ls before submit)
+Capture these and save them:
 
-Command Injection output (directory listing)
+| Filename | What to capture |
+|----------|-----------------|
+| `cmd-injection-input.png` | `127.0.0.1; ls` typed |
+| `cmd-injection-output.png` | Directory listing result |
+| `sql-injection-input.png` | `1' OR '1' = '1` typed |
+| `sql-injection-output.png` | Multiple users displayed |
+| `xss-input.png` | `<script>alert('XSS')</script>` typed |
+| `xss-output.png` | Popup alert |
+| `wireshark-capture.png` | Wireshark showing attack packet |
 
-Wireshark showing the attack packet
+---
 
-Phase 5: Monitoring with Docker Logs
-Step 21: Get Container ID
-bash
+### Step 21: Watch Docker Logs
+
+1. Get container ID:
+```bash
 sudo docker ps
-Step 22: Watch Real-Time Logs
-bash
+```
+2. Watch logs:
+```bash
 sudo docker logs -f <container_id>
-Step 23: Perform Attack While Watching
-In Firefox, perform SQL Injection
-
-Look at the terminal - you will see the attack logged:
-
-text
-GET /vulnerabilities/sqli/?id=1%27+OR+%271%27%3D%271
-Commands Reference Sheet
-Task	Command
-Start DVWA	sudo docker run -d -p 80:80 vulnerables/web-dvwa
-Check DVWA status	sudo docker ps
-Stop DVWA	sudo docker stop $(sudo docker ps -q)
-Start Wireshark	sudo wireshark
-Watch Docker logs	sudo docker logs -f $(sudo docker ps -q)
-Command Injection	127.0.0.1; ls
-SQL Injection	1' OR '1' = '1
-XSS	<script>alert('XSS')</script>
-Common Problems and Solutions
-Problem	Solution
-7-Zip extraction not working	Install 7-Zip, right-click → Extract Here
-"AMD-V disabled" error	Enter BIOS (F2), enable SVM Mode, save with F10
-DVWA stuck on setup page	Click "Create/Reset Database"
-SQL Injection syntax error	Try 1' OR '1' = '1 instead
-Snort/Suricata installation failed	Use Wireshark and Docker logs instead
-What I Learned
-Technical Skills
-Virtual machine setup (VirtualBox)
-
-BIOS configuration (enabling virtualization)
-
-Basic Linux commands (sudo, docker, ls, cd)
-
-Docker container deployment
-
-Web application attacks (Command Injection, SQL Injection, XSS)
-
-Network traffic analysis with Wireshark
-
-Log monitoring with Docker logs
-
-Soft Skills
-Troubleshooting errors systematically
-
-Knowing when to abandon tools that don't work
-
-Documenting the entire process
-
-Quick Start (One-Line Commands)
-bash
-# Start everything
-sudo docker run -d -p 80:80 vulnerables/web-dvwa
-
-# Then in Firefox:
-http://localhost
-# Login: admin / password
-
-# Attack: 127.0.0.1; ls
-# Attack: 1' OR '1' = '1
-# Attack: <script>alert('XSS')</script>
-Resources
-Kali Linux
-
-VirtualBox
-
-DVWA on Docker Hub
-
-Wireshark
-
-Built with ☕ and persistence | June 2026
-
-text
+```
+3. Perform SQL Injection in Firefox
+4. You will see the attack in the logs
 
 ---
 
-## How to Post This
+## Commands Reference Sheet
 
-1. Go to your GitHub repository: `https://github.com/swapnilingle2406/Cybersecurity-home-lab`
-
-2. Click **"Add file"** → **"Create new file"**
-
-3. Name it: `PROJECT-GUIDE.md`
-
-4. Copy everything inside the code block above and paste it
-
-5. Scroll down → Write commit message: `Added complete project guide`
-
-6. Click **"Commit changes"**
+| Task | Command |
+|------|---------|
+| Start DVWA | `sudo docker run -d -p 80:80 vulnerables/web-dvwa` |
+| Check running containers | `sudo docker ps` |
+| Start Wireshark | `sudo wireshark` |
+| View Docker logs | `sudo docker logs -f $(sudo docker ps -q)` |
 
 ---
 
-## Update Your README.md
+## Attack Payloads
 
-At the bottom of your README.md, add:
+| Attack | Payload |
+|--------|---------|
+| Command Injection | `127.0.0.1; ls` |
+| SQL Injection | `1' OR '1' = '1` |
+| XSS | `<script>alert('XSS')</script>` |
 
-```markdown
-## 📚 More Information
+---
 
-For a complete step-by-step guide, see [PROJECT-GUIDE.md](PROJECT-GUIDE.md)
+## Troubleshooting
+
+| Problem | Solution |
+|---------|----------|
+| DVWA not loading | `sudo docker run -d -p 80:80 vulnerables/web-dvwa` |
+| SQL Injection error | Try `1' OR '1' = '1` instead |
+| Wireshark not capturing | Select "lo" interface |
+
+---
+
+**Your project is complete!** 🎉
